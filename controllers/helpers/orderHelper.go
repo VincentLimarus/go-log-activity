@@ -8,7 +8,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -21,7 +20,6 @@ func DeleteOrder(c *gin.Context, DeleteOrderRequestDTO requests.DeleteOrderReque
 	mongoClient := configs.GetMongoDB()
 
 	if db == nil {
-		log.Println("[ERROR] Database connection is nil")
 		return 500, outputs.InternalServerErrorOutput{
 			Code:    500,
 			Message: "Database connection failed",
@@ -31,7 +29,6 @@ func DeleteOrder(c *gin.Context, DeleteOrderRequestDTO requests.DeleteOrderReque
 	id := DeleteOrderRequestDTO.ID
 
 	if id == uuid.Nil {
-		log.Println("[ERROR] Invalid order ID")
 		return 400, outputs.BadRequestOutput{
 			Code:    400,
 			Message: "Invalid order ID",
@@ -44,13 +41,11 @@ func DeleteOrder(c *gin.Context, DeleteOrderRequestDTO requests.DeleteOrderReque
 	err := db.Get(&order, query, id)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			log.Printf("[WARNING] Order with ID %s not found", id)
 			return 404, outputs.NotFoundOutput{
 				Code:    404,
 				Message: "Order not found",
 			}
 		}
-		log.Printf("[ERROR] Failed to fetch order. Query: %s, ID: %s, Error: %v", query, id, err)
 		return 500, outputs.InternalServerErrorOutput{
 			Code:    500,
 			Message: "Internal Server Error",
@@ -59,7 +54,6 @@ func DeleteOrder(c *gin.Context, DeleteOrderRequestDTO requests.DeleteOrderReque
 
 	email, exists := c.Get("user_email")
 	if !exists {
-		log.Println("[ERROR] User email not found in context")
 		return 500, outputs.InternalServerErrorOutput{
 			Code:    500,
 			Message: "Internal Server Error",
@@ -77,7 +71,6 @@ func DeleteOrder(c *gin.Context, DeleteOrderRequestDTO requests.DeleteOrderReque
 
 	_, err = logCollection.InsertOne(context.Background(), logData)
 	if err != nil {
-		log.Printf("[ERROR] Failed to log activity to MongoDB: %v", err)
 		return 500, outputs.InternalServerErrorOutput{
 			Code:    500,
 			Message: "Failed to log activity to MongoDB",
@@ -87,7 +80,6 @@ func DeleteOrder(c *gin.Context, DeleteOrderRequestDTO requests.DeleteOrderReque
 	deleteQuery := "DELETE FROM orders WHERE id = $1"
 	_, err = db.Exec(deleteQuery, id)
 	if err != nil {
-		log.Printf("[ERROR] Failed to delete order. ID: %s, Error: %v", id, err)
 		return 500, outputs.InternalServerErrorOutput{
 			Code:    500,
 			Message: "Internal Server Error",
