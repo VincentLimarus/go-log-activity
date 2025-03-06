@@ -17,7 +17,6 @@ INSERT INTO users (name, email)
 VALUES 
 ('Vincent', 'vincent.limarus-guest@moladin.com'),
 ('Senn', 'Senn@gmail.com'),
-('edel', 'Tes@gmail.com');
 
 INSERT INTO orders (order_status) VALUES
 ('Pending'),
