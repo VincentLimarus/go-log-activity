@@ -35,16 +35,6 @@ func ConnectToDB() {
 	log.Println("Connected to PostgreSQL")
 }
 
-func CloseDB() {
-	if DB != nil {
-		if err := DB.Close(); err != nil {
-			log.Printf("Error closing PostgreSQL connection: %v", err)
-		} else {
-			log.Println("PostgreSQL connection closed")
-		}
-	}
-}
-
 func GetDB() *sqlx.DB {
 	return DB
 }
@@ -75,19 +65,6 @@ func ConnectToMongo() {
 
 	mongoClient = client
 	log.Println("Connected to MongoDB")
-}
-
-func CloseMongo() {
-	if mongoClient != nil {
-		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		defer cancel()
-
-		if err := mongoClient.Disconnect(ctx); err != nil {
-			log.Printf("Error closing MongoDB connection: %v", err)
-		} else {
-			log.Println("MongoDB connection closed")
-		}
-	}
 }
 
 func GetMongoDB() *mongo.Client {

@@ -9,6 +9,7 @@ func init(){
 	configs.LoadEnvVariables()
 	configs.ConnectToDB()
 	configs.ConnectToMongo()
+	// helpers.GenerateDummyOrders()
 }
 
 func main() {
