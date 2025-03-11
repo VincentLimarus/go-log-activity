@@ -33,17 +33,19 @@ func (a *ActivityLogger) LogActivity(ctx context.Context, userEmail, message str
 	}
 
 	_, err := a.collection.InsertOne(ctx, logData)
+	if err != nil {
+		return err
+	}
+
 	return err
 }
 
 func LogOrderDeletion(userEmail string, orderID uuid.UUID) {
-	go func() {
-		logger, err := NewActivityLogger()
-		if err != nil {
-			fmt.Println("Failed to initialize logger:", err)
-			return
-		}
-		logMessage := fmt.Sprintf("Order %s deleted by %s at %s", orderID, userEmail, time.Now().Format(time.RFC3339))
-		_ = logger.LogActivity(context.Background(), userEmail, logMessage)
-	}()
+	logger, err := NewActivityLogger()
+	if err != nil {
+		fmt.Println("Failed to initialize logger:", err)
+		return
+	}
+	logMessage := fmt.Sprintf("Order %s deleted by %s at %s", orderID, userEmail, time.Now().Format(time.RFC3339))
+	_ = logger.LogActivity(context.Background(), userEmail, logMessage)	
 }

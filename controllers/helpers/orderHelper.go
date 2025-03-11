@@ -23,7 +23,7 @@ func GenerateDummyOrders() {
 
 	orderStatuses := []string{"Pending", "Completed", "Cancelled", "Processing", "Failed"}
 
-	for i := 0; i < 10; i++ {
+	for range 10 {
 		order := responses.OrderResponseDTO{
 			ID:          uuid.New(),
 			OrderStatus: orderStatuses[rand.Intn(len(orderStatuses))],
@@ -69,7 +69,7 @@ func DeleteOrder(c *gin.Context, DeleteOrderRequestDTO requests.DeleteOrderReque
 		return 500, outputs.InternalServerErrorOutput{Code: 500, Message: "Internal Server Error"}
 	}
 
-	LogOrderDeletion(email.(string), order.ID)
+	go LogOrderDeletion(email.(string), order.ID)
 
 	deleteQuery := "DELETE FROM orders WHERE id = $1"
 	_, err = db.Exec(deleteQuery, id)

@@ -2,6 +2,7 @@ package main
 
 import (
 	"VincentLimarus/log-activity/configs"
+	"VincentLimarus/log-activity/controllers/helpers"
 	"VincentLimarus/log-activity/routers"
 )
 
@@ -9,7 +10,7 @@ func init(){
 	configs.LoadEnvVariables()
 	configs.ConnectToDB()
 	configs.ConnectToMongo()
-	// helpers.GenerateDummyOrders()
+	helpers.GenerateDummyOrders()
 }
 
 func main() {
